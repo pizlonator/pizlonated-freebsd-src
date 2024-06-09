@@ -35,7 +35,7 @@ LIB_PRIVATE=	${PRIVATELIB:Dprivate}
 SHLIB=		${LIB}
 .endif
 .if !defined(SHLIB_NAME) && defined(SHLIB) && defined(SHLIB_MAJOR)
-SHLIB_NAME=	lib${LIB_PRIVATE}${SHLIB}.so.${SHLIB_MAJOR}
+SHLIB_NAME=	lib${LIB_PRIVATE}${SHLIB}.so.666${SHLIB_MAJOR}
 .endif
 .if defined(SHLIB_NAME) && !empty(SHLIB_NAME:M*.so.*)
 SHLIB_LINK?=	${SHLIB_NAME:R}
