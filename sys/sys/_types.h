@@ -69,14 +69,14 @@ typedef	__uint32_t	__uint_least32_t;
 typedef	__uint64_t	__uint_least64_t;
 typedef	__uint64_t	__uintmax_t;
 
-#if __SIZEOF_POINTER__ == 8
+#if __SIZEOF_INT_POINTER__ == 8
 typedef	__int64_t	__intptr_t;
 typedef	__int64_t	__intfptr_t;
 typedef	__uint64_t	__uintptr_t;
 typedef	__uint64_t	__uintfptr_t;
 typedef	__uint64_t	__vm_offset_t;
 typedef	__uint64_t	__vm_size_t;
-#elif __SIZEOF_POINTER__ == 4
+#elif __SIZEOF_INT_POINTER__ == 4
 typedef	__int32_t	__intptr_t;
 typedef	__int32_t	__intfptr_t;
 typedef	__uint32_t	__uintptr_t;

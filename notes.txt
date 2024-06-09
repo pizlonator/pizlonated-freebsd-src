@@ -1,0 +1,47 @@
+The simplest way to build:
+
+MAKEOBJDIRPREFIX=/home/pizlo/Programs/pizlonated-freebsd-obj make -j 32 buildworld
+
+Will need to edit src.conf, and set:
+
+WITHOUT_TOOLCHAIN=yes
+WITHOUT_CLANG_BOOTSTRAP=yes
+WITHOUT_LIB32=yes
+WITHOUT_OPENMP=yes
+
+These should be set automatically by WITHOUT_TOOLCHAIN, but otherwise we'd have to set them:
+
+WITHOUT_CLANG
+WITHOUT_LLD
+WITHOUT_LLDB
+
+I think that we can point to our own src.conf by doing:
+
+MAKEOBJDIRPREFIX=/home/pizlo/Programs/pizlonated-freebsd-obj make -j 32 SRCCONF=<filename> buildworld
+
+Here's what a link command looks like:
+
+cc -target x86_64-unknown-freebsd14.1 --sysroot=/home/pizlo/Programs/pizlonated-freebsd-obj/home/pizlo/Programs/pizlonated-freebsd-src/amd64.amd64/tmp -B/home/pizlo/Programs/pizlonated-freebsd-obj/home/pizlo/Programs/pizlonated-freebsd-src/amd64.amd64/tmp/usr/bin -O2 -pipe -fno-common -DHAVE_CONFIG_H -DATF_BUILD_CC='"cc"' -DATF_BUILD_CFLAGS='"-Wall"' -DATF_BUILD_CPP='"cpp"' -DATF_BUILD_CPPFLAGS='""' -DATF_BUILD_CXX='"c++"' -DATF_BUILD_CXXFLAGS='"-Wall"' -DATF_INCLUDEDIR='"/usr/include"' -I/home/pizlo/Programs/pizlonated-freebsd-src/contrib/atf -DHAVE_CONFIG_H -DATF_BUILD_CC='"cc"' -DATF_BUILD_CFLAGS='"-Wall"' -DATF_BUILD_CPP='"cpp"' -DATF_BUILD_CPPFLAGS='""' -DATF_BUILD_CXX='"c++"' -DATF_BUILD_CXXFLAGS='"-Wall"' -fPIE -g -gz=zlib -std=gnu99 -Wno-format-zero-length -fstack-protector-strong -Wsystem-headers -Werror -Wall -Wno-format-y2k -W -Wno-unused-parameter -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith -Wno-uninitialized -Wno-pointer-sign -Wdate-time -Wno-empty-body -Wno-string-plus-int -Wno-unused-const-variable -Wno-error=unused-but-set-parameter -Wno-tautological-compare -Wno-unused-value -Wno-parentheses-equality -Wno-unused-function -Wno-enum-conversion -Wno-unused-local-typedef -Wno-address-of-packed-member -Qunused-arguments  -Wl,-zrelro -pie  -o utils_test.full utils_test.o test_helpers.o  -lprivateatf-c
+
+So, it's using --sysroot to point at the staging area.
+
+This means that I probably don't even need to installworld?
+
+Indeed, looks like I can point LD_LIBRARY_PATH at the staging area when running shit:
+
+/home/pizlo/Programs/pizlonated-freebsd-obj/home/pizlo/Programs/pizlonated-freebsd-src/amd64.amd64/tmp/lib
+
+So, maybe what I need to do, is build libpizlo with everything statically linked into it, including the underlying system libc?
+
+Or, it might be possible to use library versioning to resolve the issue. For example, I could say that the pizlonated libc is libc.so.6667 instead of libc.so.7 or whatever. Funky!
+
+Wait, library dependencies mean that libpizlo could just depend on libc, and then the compiler toolchain shouldn't have to add -lc to everything!
+
+Here's how to build a toolchain-less world:
+
+MAKEOBJDIRPREFIX=/home/pizlo/Programs/pizlonated-freebsd-obj make -j 32 SRCCONF=$PWD/src.conf buildworld
+
+Then we can run run programs like:
+
+LD_LIBRARY_PATH=/home/pizlo/Programs/pizlonated-freebsd-obj/home/pizlo/Programs/pizlonated-freebsd-src/amd64.amd64/tmp/lib /home/pizlo/Programs/pizlonated-freebsd-obj/home/pizlo/Programs/pizlonated-freebsd-src/amd64.amd64/usr.bin/tail/tail Makefile
+
