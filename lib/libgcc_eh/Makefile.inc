@@ -8,13 +8,6 @@ STATIC_CFLAGS+=${PICFLAG} -fvisibility=hidden -DVISIBILITY_HIDDEN
 .PATH: ${COMPILERRTDIR}/lib/builtins
 .PATH: ${UNWINDSRCDIR}
 SRCS_EXC+=	gcc_personality_v0.c
-SRCS_EXC+=	Unwind-EHABI.cpp
-SRCS_EXC+=	Unwind-sjlj.c
-SRCS_EXC+=	UnwindLevel1-gcc-ext.c
-SRCS_EXC+=	UnwindLevel1.c
-SRCS_EXC+=	UnwindRegistersRestore.S
-SRCS_EXC+=	UnwindRegistersSave.S
-SRCS_EXC+=	libunwind.cpp
 
 SRCS+=		${SRCS_EXC}
 .if ${MACHINE} == "amd64" || ${MACHINE} == "i386" || ${MACHINE} == "powerpc"

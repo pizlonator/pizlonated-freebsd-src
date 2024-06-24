@@ -8,6 +8,7 @@ WITHOUT_TOOLCHAIN=yes
 WITHOUT_CLANG_BOOTSTRAP=yes
 WITHOUT_LIB32=yes
 WITHOUT_OPENMP=yes
+NO_THREAD_STACK_UNWIND=yes
 
 These should be set automatically by WITHOUT_TOOLCHAIN, but otherwise we'd have to set them:
 
