@@ -1,9 +1,8 @@
 /*-
- * Copyright (c) 1990 The Regents of the University of California.
- * All rights reserved.
+ * SPDX-License-Identifier: BSD-2-Clause
  *
- * This code is derived from software contributed to Berkeley by
- * William Jolitz.
+ * Copyright (c) 2024 Epic Games, Inc.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -13,14 +12,11 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
@@ -30,23 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#if defined(SYSLIBC_SCCS) && !defined(lint)
-	.asciz "@(#)Ovfork.s	5.1 (Berkeley) 4/23/90"
-#endif /* SYSLIBC_SCCS and not lint */
-#include <machine/asm.h>
-#include "SYS.h"
+#include <setjmp.h>
+#include <pizlonated_runtime.h>
 
-	WEAK_REFERENCE(__sys_vfork, _vfork)
-	WEAK_REFERENCE(__sys_vfork, vfork)
-ENTRY(__sys_vfork)
-	popq	%rsi		/* fetch return address (%rsi preserved) */
-	mov	$SYS_vfork,%rax
-	KERNCALL
-	jb	1f
-	jmp	*%rsi
-1:
-	pushq	%rsi
-	jmp	HIDENAME(cerror)
-END(__sys_vfork)
+__weak_reference(__siglongjmp, siglongjmp);
 
-	.section .note.GNU-stack,"",%progbits
+void __siglongjmp(jmp_buf buf, int value)
+{
+    zsiglongjmp(*(zjmp_buf**)buf, value);
+}

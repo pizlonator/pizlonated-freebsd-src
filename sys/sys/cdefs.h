@@ -531,47 +531,17 @@
 #if defined(__GNUC__)
 #define	__strong_reference(sym,aliassym)	\
 	extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
-#ifdef __STDC__
 #define	__weak_reference(sym,alias)	\
-	__asm__(".weak " #alias);	\
-	__asm__(".equ "  #alias ", " #sym)
-#define	__warn_references(sym,msg)	\
-	__asm__(".section .gnu.warning." #sym);	\
-	__asm__(".asciz \"" msg "\"");	\
-	__asm__(".previous")
-#define	__sym_compat(sym,impl,verid)	\
-	__asm__(".symver " #impl ", " #sym "@" #verid)
-#define	__sym_default(sym,impl,verid)	\
-	__asm__(".symver " #impl ", " #sym "@@@" #verid)
-#else
-#define	__weak_reference(sym,alias)	\
-	__asm__(".weak alias");		\
-	__asm__(".equ alias, sym")
-#define	__warn_references(sym,msg)	\
-	__asm__(".section .gnu.warning.sym"); \
-	__asm__(".asciz \"msg\"");	\
-	__asm__(".previous")
-#define	__sym_compat(sym,impl,verid)	\
-	__asm__(".symver impl, sym@verid")
-#define	__sym_default(impl,sym,verid)	\
-	__asm__(".symver impl, sym@@@verid")
-#endif	/* __STDC__ */
+	__asm__(".filc_weak_alias " #sym ", " #alias)
+#define	__warn_references(sym,msg) struct __hack
+#define	__sym_compat(sym,impl,verid) struct __hack
+#define	__sym_default(sym,impl,verid) struct __hack
 #endif	/* __GNUC__ */
 
-#define	__GLOBL(sym)	__asm__(".globl " __XSTRING(sym))
-#define	__WEAK(sym)	__asm__(".weak " __XSTRING(sym))
+#define	__GLOBL(sym)	__asm__(".filc_globl " __XSTRING(sym))
+#define	__WEAK(sym)	__asm__(".filc_weak " __XSTRING(sym))
 
-#if defined(__GNUC__)
-#define	__IDSTRING(name,string)	__asm__(".ident\t\"" string "\"")
-#else
-/*
- * The following definition might not work well if used in header files,
- * but it should be better than nothing.  If you want a "do nothing"
- * version, then it should generate some harmless declaration, such as:
- *    #define	__IDSTRING(name,string)	struct __hack
- */
-#define	__IDSTRING(name,string)	static const char name[] __unused = string
-#endif
+#define	__IDSTRING(name,string)	struct hack
 
 /*
  * Embed the rcs id of a source file in the resulting library.  Note that in

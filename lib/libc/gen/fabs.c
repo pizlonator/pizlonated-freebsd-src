@@ -1,6 +1,9 @@
+/*	$NetBSD: fabs.c,v 1.2 2002/05/26 11:48:01 wiz Exp $	*/
+
 /*-
- * Copyright (c) 2003 Peter Wemm <peter@FreeBSD.org>
- * All rights reserved.
+ * SPDX-License-Identifier: BSD-4-Clause
+ *
+ * Copyright (c) 1996 Mark Brinicombe
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -10,6 +13,12 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *	This product includes software developed by Mark Brinicombe
+ * 4. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -24,23 +33,13 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include <SYS.h>
-
 /*
- * This has to be magic to handle the multiple returns.
- * Otherwise, the setcontext() syscall will return here and we'll
- * pop off the return address and go to the *setcontext* call.
+ * fabs(x) returns the absolute value of x.
  */
-	WEAK_REFERENCE(__sys_getcontext, _getcontext)
-	WEAK_REFERENCE(__sys_getcontext, getcontext)
-ENTRY(__sys_getcontext)
-	movq	(%rsp),%rsi	/* save getcontext return address */
-	mov	$SYS_getcontext,%rax
-	KERNCALL
-	jb	HIDENAME(cerror)
-	addq	$8,%rsp		/* remove stale (setcontext) return address */
-	jmp	*%rsi		/* restore return address */
-END(__sys_getcontext)
-
-	.section .note.GNU-stack,"",%progbits
+double
+fabs(double x)
+{
+	if (x < 0)
+		x = -x;
+	return(x);
+}

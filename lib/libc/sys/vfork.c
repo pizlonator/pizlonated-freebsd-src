@@ -1,5 +1,7 @@
 /*-
- * Copyright (c) 2004 Peter Wemm
+ * SPDX-License-Identifier: BSD-2-Clause
+ *
+ * Copyright (c) 2024 Epic Games, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,22 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-/*
- * Return floating point absolute value of a double.
- */
+#include <unistd.h>
 
-	.text
-ENTRY(fabs)
-	movsd	%xmm0, %xmm1
-	movsd	signbit(%rip), %xmm0
-	andnpd  %xmm1, %xmm0
-	ret
-END(fabs)
+__weak_reference(__sys_vfork, _vfork);
+__weak_reference(__sys_vfork, vfork);
 
-	.section .rodata
-	.p2align 3
-signbit:
-	.quad	0x8000000000000000
+pid_t __sys_fork(void);
 
-	.section .note.GNU-stack,"",%progbits
+pid_t __sys_vfork(void)
+{
+    return __sys_fork();
+}

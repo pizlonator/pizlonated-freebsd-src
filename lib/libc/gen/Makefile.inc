@@ -13,6 +13,7 @@ SRCS+=	__getosreldate.c \
 	_once_stub.c \
 	_pthread_stubs.c \
 	_rand48.c \
+	_setjmp.c \
 	_spinlock_stub.c \
 	_thread_init.c \
 	aio_read2.c \
@@ -53,6 +54,7 @@ SRCS+=	__getosreldate.c \
 	eventfd.c \
 	exec.c \
 	exect.c \
+	fabs.c \
 	fdevname.c \
 	feature_present.c \
 	fmtcheck.c \
@@ -125,6 +127,7 @@ SRCS+=	__getosreldate.c \
 	readpassphrase.c \
 	recvmmsg.c \
 	rewinddir.c \
+	rfork_thread.c \
 	scandir.c \
 	scandir_b.c \
 	scandir-compat11.c \
@@ -136,6 +139,7 @@ SRCS+=	__getosreldate.c \
 	sendmmsg.c \
 	setdomainname.c \
 	sethostname.c \
+	setjmp.c \
 	setjmperr.c \
 	setmode.c \
 	setproctitle.c \
@@ -143,6 +147,7 @@ SRCS+=	__getosreldate.c \
 	siginterrupt.c \
 	siglist.c \
 	signal.c \
+	sigsetjmp.c \
 	sigsetops.c \
 	sleep.c \
 	srand48.c \
