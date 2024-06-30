@@ -16,11 +16,44 @@
 # While historically machine dependent, all architectures have the following
 # declarations in common:
 #
-NOASM=	exit.o \
+NOASM=	__syscall.o \
+	break.o \
+	exit.o \
+	getcontext.o \
 	getlogin.o \
+	mount.o \
 	sbrk.o \
 	sstk.o \
-	yield.o
+	syscall.o \
+	vfork.o \
+	yield.o \
+	freebsd11_mknod.o \
+	freebsd10_pipe.o \
+	freebsd11_vadvise.o \
+	freebsd11_stat.o \
+	freebsd11_fstat.o \
+	freebsd11_lstat.o \
+	freebsd11_getdirentries.o \
+	freebsd7___semctl.o \
+	freebsd7_msgctl.o \
+	freebsd7_shmctl.o \
+	freebsd11_getdents.o \
+	freebsd11_nstat.o \
+	freebsd11_nfstat.o \
+	freebsd11_nlstat.o \
+	freebsd11_fhstat.o \
+	freebsd11_kevent.o \
+	freebsd11_getfsstat.o \
+	freebsd11_statfs.o \
+	freebsd11_fstatfs.o \
+	freebsd11_fhstatfs.o \
+	freebsd13_swapoff.o \
+	freebsd10__umtx_lock.o \
+	freebsd10__umtx_unlock.o \
+	freebsd12_shm_open.o \
+	freebsd11_fstatat.o \
+	freebsd11_mknodat.o \
+	freebsd12_closefrom.o
 PSEUDO=	_exit.o \
 	_getlogin.o
 .sinclude "${LIBC_SRCTOP}/${LIBC_ARCH}/sys/Makefile.inc"
@@ -47,11 +80,15 @@ SRCS+= getdirentries.c
 NOASM+= getdirentries.o
 PSEUDO+= _getdirentries.o
 
+SRCS+= __syscall.c
+SRCS+= break.c
 SRCS+= brk.c
 SRCS+= closefrom.c
 SRCS+= getcontext.c
+SRCS+= mount.c
 SRCS+= pipe.c
 SRCS+= shm_open.c
+SRCS+= syscall.c
 SRCS+= vadvise.c
 SRCS+= vfork.c
 SRCS+= POSIX2x_Fork.c

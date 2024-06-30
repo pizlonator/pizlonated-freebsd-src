@@ -272,7 +272,7 @@ overflow:
  * Actual definition of mcount function.  Defined in <machine/profile.h>,
  * which is included by <sys/gmon.h>.
  */
-MCOUNT
+//MCOUNT
 
 #ifdef GUPROF
 void

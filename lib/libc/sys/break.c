@@ -1,12 +1,8 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2003 Peter Wemm
- * Copyright (c) 2017, 2018 The FreeBSD Foundation
+ * Copyright (c) 2024 Epic Games, Inc.
  * All rights reserved.
- *
- * Portions of this software were developed by Konstantin Belousov
- * under sponsorship from the FreeBSD Foundation.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,34 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#define _WANT_P_OSREL
-#include <sys/param.h>
-#include <machine/cpufunc.h>
-#include <machine/specialreg.h>
-#include <machine/sysarch.h>
-#include <x86/ifunc.h>
-#include "libc_private.h"
+#include <sys/cdefs.h>
+#include <stdfil.h>
 
-static int
-amd64_get_gsbase_cpu(void **addr)
+__weak_reference(__sys_break, _break);
+__weak_reference(__sys_break, break);
+
+void *__sys_break(char *nsize)
 {
-
-	*addr = (void *)rdgsbase();
-	return (0);
+    zerror("break() syscall not supported");
+    return 0;
 }
 
-static int
-amd64_get_gsbase_syscall(void **addr)
-{
 
-	return (sysarch(AMD64_GET_GSBASE, addr));
-}
-
-DEFINE_UIFUNC(, int, amd64_get_gsbase, (void **))
-{
-
-	if (__getosreldate() >= P_OSREL_WRFSBASE &&
-	    (cpu_stdext_feature & CPUID_STDEXT_FSGSBASE) != 0)
-		return (amd64_get_gsbase_cpu);
-	return (amd64_get_gsbase_syscall);
-}

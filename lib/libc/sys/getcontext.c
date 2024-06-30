@@ -32,7 +32,7 @@
 __weak_reference(__sys_getcontext, _getcontext);
 __weak_reference(__sys_getcontext, getcontext);
 
-int getcontext(ucontext_t *ucp)
+int __sys_getcontext(ucontext_t *ucp)
 {
     zerror("getcontext not supported");
     return 0;
