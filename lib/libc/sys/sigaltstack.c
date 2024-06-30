@@ -1,5 +1,7 @@
 /*-
- * Copyright (c) 2008 David Schultz <das@FreeBSD.ORG>
+ * SPDX-License-Identifier: BSD-2-Clause
+ *
+ * Copyright (c) 2024 Epic Games, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,13 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-ENTRY(lrintl)
-	fldt	8(%rsp)
-	subq	$8,%rsp
-	fistpll	(%rsp)
-	popq	%rax
-	ret
-END(lrintl)
+#include <signal.h>
+#include <stdfil.h>
 
-	.section .note.GNU-stack,"",%progbits
+__weak_reference(__sys_sigaltstack, _sigaltstack);
+__weak_reference(__sys_sigaltstack, sigaltstack);
+
+int __sys_sigaltstack(const stack_t * restrict ss, stack_t * restrict oss)
+{
+    zerror("sigaltstack not supported");
+    return 0;
+}
