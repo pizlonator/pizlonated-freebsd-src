@@ -25,6 +25,7 @@ NOASM=	__syscall.o \
 	sbrk.o \
 	sigaltstack.o \
 	sstk.o \
+	sysarch.o \
 	syscall.o \
 	vfork.o \
 	yield.o \
@@ -90,6 +91,7 @@ SRCS+= mount.c
 SRCS+= pipe.c
 SRCS+= sigaltstack.c
 SRCS+= shm_open.c
+SRCS+= sysarch.c
 SRCS+= syscall.c
 SRCS+= vadvise.c
 SRCS+= vfork.c
