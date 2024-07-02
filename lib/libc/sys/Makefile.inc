@@ -22,7 +22,10 @@ NOASM=	__syscall.o \
 	getcontext.o \
 	getlogin.o \
 	mount.o \
+	msgsys.o \
 	sbrk.o \
+	semsys.o \
+	shmsys.o \
 	sigaltstack.o \
 	sstk.o \
 	sysarch.o \
