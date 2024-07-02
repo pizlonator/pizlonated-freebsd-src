@@ -27,13 +27,14 @@
  */
 
 #include <unistd.h>
+#include <stdfil.h>
 
 __weak_reference(__sys_vfork, _vfork);
 __weak_reference(__sys_vfork, vfork);
 
-pid_t __sys_fork(void);
-
 pid_t __sys_vfork(void)
 {
-    return __sys_fork();
+    /* FreeBSD relies on the shared memory feature of vfork, which we cannot possibly support. */
+    zerror("vfork() not supported.");
+    return -1;
 }
