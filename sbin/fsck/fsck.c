@@ -362,7 +362,7 @@ checkfs(const char *pvfstype, const char *spec, const char *mntpt,
 		(void)printf("\n");
 	}
 
-	switch (pid = vfork()) {
+	switch (pid = fork()) {
 	case -1:				/* Error. */
 		warn("vfork");
 		if (optbuf)

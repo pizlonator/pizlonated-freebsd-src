@@ -149,7 +149,7 @@ setup_and_wait(struct trussinfo *info, char *command[])
 {
 	pid_t pid;
 
-	pid = vfork();
+	pid = fork();
 	if (pid == -1)
 		err(1, "fork failed");
 	if (pid == 0) {	/* Child */

@@ -1399,7 +1399,7 @@ extern struct group	*getgrnam();
 #   define UID_T	int	/* GNUC gets it right, ConvexC botches */
 #   define GID_T	int	/* GNUC gets it right, ConvexC botches */
 #  endif
-#  if SECUREWARE
+#  if SECUREWARE || 1
 #   define FORK	fork		/* SecureWare wants the real fork! */
 #  else
 #   define FORK	vfork		/* the rest of the OS versions don't care */

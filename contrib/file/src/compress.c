@@ -1123,7 +1123,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 	/* For processes with large mapped virtual sizes, vfork
 	 * may be _much_ faster (10-100 times) than fork.
 	 */
-	pid = vfork();
+	pid = fork();
 	if (pid == -1) {
 		return makeerror(newch, n, "Cannot vfork, %s",
 		    strerror(errno));

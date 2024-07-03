@@ -401,7 +401,7 @@
 #define HAVE_WORKING_FORK 1
 
 /* Define to 1 if `vfork' works. */
-#define HAVE_WORKING_VFORK 1
+/* #undef HAVE_WORKING_VFORK */
 
 /* Define to 1 if extending the stack slightly past the limit causes a
    SIGSEGV, and an alternate stack can be established with sigaltstack, and

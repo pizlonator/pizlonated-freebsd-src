@@ -722,7 +722,7 @@ argv_sexp(SCR *sp, CHAR_T **bpp, size_t *blenp, size_t *lenp)
 	 * Do the minimal amount of work possible, the shell is going to run
 	 * briefly and then exit.  We sincerely hope.
 	 */
-	switch (pid = vfork()) {
+	switch (pid = fork()) {
 	case -1:			/* Error. */
 		msgq(sp, M_SYSERR, "vfork");
 err:		if (ifp != NULL)

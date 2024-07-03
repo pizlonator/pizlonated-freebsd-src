@@ -2452,7 +2452,7 @@ create_tracing_ifnet()
 	};
 	char *env[] = {NULL};
 
-	if (vfork() == 0) {
+	if (fork() == 0) {
 		close(STDERR_FILENO);
 		execve(cmd[0], cmd, env);
 		_exit(0);

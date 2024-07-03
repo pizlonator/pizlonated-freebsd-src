@@ -388,7 +388,7 @@ run_cscope(SCR *sp, CSC *csc, char *dbname)
 		msgq(sp, M_SYSERR, "pipe");
 		goto err;
 	}
-	switch (csc->pid = vfork()) {
+	switch (csc->pid = fork()) {
 		char *dn, *dbn;
 	case -1:
 		msgq(sp, M_SYSERR, "vfork");

@@ -111,7 +111,7 @@ ex_exec_proc(SCR *sp, EXCMD *cmdp, char *cmd, const char *msg, int need_newline)
 	}
 	(void)ex_fflush(sp);
 
-	switch (pid = vfork()) {
+	switch (pid = fork()) {
 	case -1:			/* Error. */
 		msgq(sp, M_SYSERR, "vfork");
 		return (1);

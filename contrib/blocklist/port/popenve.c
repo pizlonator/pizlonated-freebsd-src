@@ -198,7 +198,7 @@ popenve(const char *cmd, char *const *argv, char *const *envp, const char *type)
 #ifdef _REENTRANT
 	(void)rwlock_rdlock(&pidlist_lock);
 #endif
-	switch (pid = vfork()) {
+	switch (pid = fork()) {
 	case -1:			/* Error. */
 		serrno = errno;
 #ifdef _REENTRANT

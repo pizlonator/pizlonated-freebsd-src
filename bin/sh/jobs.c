@@ -1021,7 +1021,7 @@ vforkexecshell(struct job *jp, char **argv, char **envp, const char *path, int i
 	INTOFF;
 	flushall();
 	savehandler = handler;
-	pid = vfork();
+	pid = fork();
 	if (pid == -1) {
 		TRACE(("Vfork failed, errno=%d\n", errno));
 		INTON;

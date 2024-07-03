@@ -1347,7 +1347,7 @@ shell(int argc, char *argv[] __unused)
     setcommandmode();
 
     err_ = (TerminalWindowSize(&oldrows, &oldcols) == 0) ? 1 : 0;
-    switch(vfork()) {
+    switch(fork()) {
     case -1:
 	perror("Fork failed\n");
 	break;

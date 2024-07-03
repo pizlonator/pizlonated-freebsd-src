@@ -70,7 +70,7 @@ __libc_system(const char *command)
 	(void)sigaddset(&newsigblock, SIGINT);
 	(void)sigaddset(&newsigblock, SIGQUIT);
 	(void)__libc_sigprocmask(SIG_BLOCK, &newsigblock, &oldsigblock);
-	switch(pid = vfork()) {
+	switch(pid = fork()) {
 	/*
 	 * In the child, use unwrapped syscalls.  libthr is in
 	 * undefined state after vfork().

@@ -263,7 +263,6 @@ exec_Create(struct physical *p)
         free(dev);
         dev = NULL;
       } else {
-        static int child_status;		/* This variable is abused ! */
         int stat, argc, i, ret, wret, pidpipe[2];
         pid_t pid, realpid;
         char *argv[MAXARGS];
@@ -299,9 +298,10 @@ exec_Create(struct physical *p)
             setuid(ID0realuid());
   #endif
   
-            child_status = 0;
-            switch ((pid = vfork())) {
+            forkexechelper* helper = forkexechelper_create();
+            switch ((pid = fork())) {
               case 0:
+                forkexechelper_start_child(helper);
                 close(pidpipe[1]);
                 break;
   
@@ -315,7 +315,7 @@ exec_Create(struct physical *p)
               default:
                 write(pidpipe[1], &pid, sizeof pid);
                 close(pidpipe[1]);
-                _exit(child_status);	/* The error from exec() ! */
+                _exit(forkexechelper_finish(helper));	/* The error from exec() ! */
             }
   
             log_Printf(LogDEBUG, "Exec'ing ``%s''\n", p->name.base);
@@ -336,7 +336,8 @@ exec_Create(struct physical *p)
               fcntl(i, F_SETFD, 1);
   
             execvp(*argv, argv);
-            child_status = errno;		/* Only works for vfork() */
+            int child_status = errno;
+            forkexechelper_set_errno_in_child(helper);
             printf("execvp failed: %s: %s\r\n", *argv, strerror(child_status));
             _exit(child_status);
             break;

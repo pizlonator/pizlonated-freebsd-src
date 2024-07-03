@@ -34,6 +34,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <forkexechelper.h>
 #include <sched.h>
 #include <spawn.h>
 #include <signal.h>
@@ -223,7 +224,7 @@ struct posix_spawn_args {
 	char * const * argv;
 	char * const * envp;
 	int use_env_path;
-	volatile int error;
+	forkexechelper* helper;
 };
 
 #define	PSPAWN_STACK_ALIGNMENT	16
@@ -249,22 +250,24 @@ _posix_spawn_thr(void *data)
 	char * const *envp;
 
 	psa = data;
+	forkexechelper_start_child(psa->helper);
+	
 	if (psa->sa != NULL) {
-		psa->error = process_spawnattr(*psa->sa);
-		if (psa->error)
-			_exit(127);
+		if (process_spawnattr(*psa->sa))
+			goto error;
 	}
 	if (psa->fa != NULL) {
-		psa->error = process_file_actions(*psa->fa);
-		if (psa->error)
-			_exit(127);
+		if (process_file_actions(*psa->fa))
+			goto error;
 	}
 	envp = psa->envp != NULL ? psa->envp : environ;
 	if (psa->use_env_path)
 		execvpe(psa->path, psa->argv, envp);
 	else
 		_execve(psa->path, psa->argv, envp);
-	psa->error = errno;
+	
+error:
+	forkexechelper_set_errno_in_child(psa->helper);
 
 	/* This is called in such a way that it must not exit. */
 	_exit(127);
@@ -317,56 +320,24 @@ do_posix_spawn(pid_t *pid, const char *path,
 	psa.argv = argv;
 	psa.envp = envp;
 	psa.use_env_path = use_env_path;
-	psa.error = 0;
+	psa.helper = forkexechelper_create();
 
-	/*
-	 * Passing RFSPAWN to rfork(2) gives us effectively a vfork that drops
-	 * non-ignored signal handlers.  We'll fall back to the slightly less
-	 * ideal vfork(2) if we get an EINVAL from rfork -- this should only
-	 * happen with newer libc on older kernel that doesn't accept
-	 * RFSPAWN.
-	 *
-	 * Combination of vfork() (or its equivalent rfork() form) and
-	 * a special property of the libthr rtld locks ensure that
-	 * rtld is operational in the child.  In particular, libthr
-	 * rtld locks do not store owner' tid into the lock word.
-	 */
-#ifdef _RFORK_THREAD_STACK_SIZE
-	/*
-	 * x86 stores the return address on the stack, so rfork(2) cannot work
-	 * as-is because the child would clobber the return address of the
-	 * parent.  Because of this, we must use rfork_thread instead while
-	 * almost every other arch stores the return address in a register.
-	 */
-	p = rfork_thread(RFSPAWN, stack + stacksz, _posix_spawn_thr, &psa);
-	free(stack);
-#else
-	p = rfork(RFSPAWN);
+	p = fork();
 	if (p == 0)
 		/* _posix_spawn_thr does not return */
 		_posix_spawn_thr(&psa);
-#endif
-	/*
-	 * The above block should leave us in a state where we've either
-	 * succeeded and we're ready to process the results, or we need to
-	 * fallback to vfork() if the kernel didn't like RFSPAWN.
-	 */
-
-	if (p == -1 && errno == EINVAL) {
-		p = vfork();
-		if (p == 0)
-			/* _posix_spawn_thr does not return */
-			_posix_spawn_thr(&psa);
-	}
+	
+	int error = forkexechelper_finish(psa.helper);
+	
 	if (p == -1)
 		return (errno);
-	if (psa.error != 0)
+	if (error != 0)
 		/* Failed; ready to reap */
 		_waitpid(p, NULL, WNOHANG);
 	else if (pid != NULL)
 		/* exec succeeded */
 		*pid = p;
-	return (psa.error);
+	return (error);
 }
 
 int

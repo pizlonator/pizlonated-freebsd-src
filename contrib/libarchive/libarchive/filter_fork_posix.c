@@ -144,7 +144,7 @@ __archive_create_child(const char *cmd, int *child_stdin, int *child_stdout,
 
 #else /* HAVE_POSIX_SPAWNP */
 
-#if HAVE_VFORK
+#if 0 || HAVE_VFORK
 	child = vfork();
 #else
 	child = fork();

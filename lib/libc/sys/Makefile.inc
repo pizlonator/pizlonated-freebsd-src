@@ -23,6 +23,7 @@ NOASM=	__syscall.o \
 	getlogin.o \
 	mount.o \
 	msgsys.o \
+	rfork.o \
 	sbrk.o \
 	semsys.o \
 	shmsys.o \
@@ -92,6 +93,7 @@ SRCS+= closefrom.c
 SRCS+= getcontext.c
 SRCS+= mount.c
 SRCS+= pipe.c
+SRCS+= rfork.c
 SRCS+= sigaltstack.c
 SRCS+= shm_open.c
 SRCS+= sysarch.c

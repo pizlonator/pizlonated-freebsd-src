@@ -355,7 +355,7 @@ Compat_RunCommand(const char *cmdp, GNode *gn, StringListNode *ln)
 
 	Var_ReexportVars();
 
-	compatChild = cpid = vfork();
+	compatChild = cpid = fork();
 	if (cpid < 0)
 		Fatal("Could not fork");
 

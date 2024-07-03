@@ -115,7 +115,7 @@ popen(const char *command, const char *type)
 	argv[3] = NULL;
 
 	THREAD_LOCK();
-	switch (pid = vfork()) {
+	switch (pid = fork()) {
 	case -1:			/* Error. */
 		THREAD_UNLOCK();
 		/*

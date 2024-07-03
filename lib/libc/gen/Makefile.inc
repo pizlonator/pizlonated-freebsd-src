@@ -57,6 +57,7 @@ SRCS+=	__getosreldate.c \
 	fabs.c \
 	fdevname.c \
 	feature_present.c \
+	forkexechelper.c \
 	fmtcheck.c \
 	fmtmsg.c \
 	fnmatch.c \

@@ -54,6 +54,7 @@ static char sccsid[] = "@(#)xargs.c	8.1 (Berkeley) 6/6/93";
 #include <err.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <forkexechelper.h>
 #include <getopt.h>
 #include <langinfo.h>
 #include <locale.h>
@@ -603,11 +604,13 @@ run(char **argv)
 	}
 exec:
 	childerr = 0;
+        forkexechelper* helper = forkexechelper_create();
 	switch (pid = vfork()) {
 	case -1:
 		warn("vfork");
 		xexit(*argv, 1);
 	case 0:
+		forkexechelper_start_child(helper);
 		if (oflag) {
 			if ((fd = open(_PATH_TTY, O_RDONLY)) == -1)
 				err(1, "can't open /dev/tty");
@@ -620,9 +623,10 @@ exec:
 			close(fd);
 		}
 		execvp(argv[0], argv);
-		childerr = errno;
+		forkexechelper_set_errno_in_child(helper);
 		_exit(1);
 	}
+	childerr = forkexechelper_finish(helper);
 	pids_add(pid);
 	waitchildren(*argv, 0);
 }

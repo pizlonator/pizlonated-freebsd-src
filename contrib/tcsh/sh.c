@@ -88,7 +88,7 @@ int do_logout = 0;
 #endif /* TESLA */
 
 
-int    use_fork = 0;		/* use fork() instead of vfork()? */
+int    use_fork = 1;		/* use fork() instead of vfork()? */
 
 /*
  * Magic pointer values. Used to specify other invalid conditions aside

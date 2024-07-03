@@ -226,9 +226,9 @@ exec_shell(const char *command, const char *use_shell, const char *use_name)
 		return(1);
 
 	omask = sigblock(sigmask(SIGCHLD));
-	switch(pid = vfork()) {
+	switch(pid = fork()) {
 	case -1:			/* error */
-		err(1, "vfork");
+		err(1, "fork");
 	case 0:				/* child */
 		(void)sigsetmask(omask);
 		execl(use_shell, use_name, "-c", command, (char *)NULL);

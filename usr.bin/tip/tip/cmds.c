@@ -936,7 +936,7 @@ expand(char name[])
 		return(name);
 	}
 	(void)snprintf(cmdbuf, sizeof(cmdbuf), "echo %s", name);
-	if ((pid = vfork()) == 0) {
+	if ((pid = fork()) == 0) {
 		Shell = value(SHELL);
 		if (Shell == NOSTR)
 			Shell = _PATH_BSHELL;
