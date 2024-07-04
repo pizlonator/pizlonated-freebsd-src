@@ -23,6 +23,7 @@ NOASM=	__syscall.o \
 	getlogin.o \
 	mount.o \
 	msgsys.o \
+	nnpfs_syscall.o \
 	rfork.o \
 	sbrk.o \
 	semsys.o \

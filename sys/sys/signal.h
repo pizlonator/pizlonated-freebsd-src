@@ -178,6 +178,10 @@ struct sigevent {
 	union {
 		__lwpid_t	_threadid;
 		struct {
+			int padding;    /* There's some code in librt that changes
+					   SIGEV_THREAD forms of sigevent to
+					   SIGEV_THREAD_ID forms in-place, so we
+					   pad this to avoid Fil-C panics. */
 			void (*_function)(union sigval);
 			struct pthread_attr **_attribute;
 		} _sigev_thread;
