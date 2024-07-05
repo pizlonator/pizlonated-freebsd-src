@@ -30,6 +30,7 @@ NOASM=	__syscall.o \
 	semsys.o \
 	shmsys.o \
 	sigaltstack.o \
+	sigreturn.o \
 	sstk.o \
 	sysarch.o \
 	syscall.o \
@@ -103,13 +104,13 @@ SRCS+= brk.c
 SRCS+= closefrom.c
 SRCS+= getcontext.c
 SRCS+= mount.c
+SRCS+= notsupstubs.c
 SRCS+= pipe.c
 SRCS+= rfork.c
 SRCS+= sigaltstack.c
 SRCS+= shm_open.c
 SRCS+= sysarch.c
 SRCS+= syscall.c
-SRCS+= thr_stubs.c
 SRCS+= vadvise.c
 SRCS+= vfork.c
 SRCS+= POSIX2x_Fork.c

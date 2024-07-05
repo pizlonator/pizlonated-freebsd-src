@@ -26,8 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#include "notsupstub.h"
+#include <sys/cdefs.h>
+#include <stdfil.h>
 
+#define NOTSUPSTUB(syscall_name) \
+    __weak_reference(__sys_ ## syscall_name, _ ## syscall_name); \
+    __weak_reference(__sys_ ## syscall_name, syscall_name); \
+    \
+    void __sys_ ## syscall_name(void) \
+    { \
+        zerror(#syscall_name "() not supported."); \
+    } \
+    struct __hack
+
+NOTSUPSTUB(sigreturn);
 NOTSUPSTUB(thr_create);
 NOTSUPSTUB(thr_exit);
 NOTSUPSTUB(thr_kill);
