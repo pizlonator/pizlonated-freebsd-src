@@ -17,6 +17,7 @@
 # declarations in common:
 #
 NOASM=	__syscall.o \
+	afs3_syscall.o \
 	break.o \
 	exit.o \
 	getcontext.o \
@@ -32,6 +33,15 @@ NOASM=	__syscall.o \
 	sstk.o \
 	sysarch.o \
 	syscall.o \
+	thr_create.o \
+	thr_exit.o \
+	thr_kill.o \
+	thr_kill2.o \
+	thr_new.o \
+	thr_self.o \
+	thr_set_name.o \
+	thr_suspend.o \
+	thr_wake.o \
 	vfork.o \
 	yield.o \
 	freebsd11_mknod.o \
@@ -99,6 +109,7 @@ SRCS+= sigaltstack.c
 SRCS+= shm_open.c
 SRCS+= sysarch.c
 SRCS+= syscall.c
+SRCS+= thr_stubs.c
 SRCS+= vadvise.c
 SRCS+= vfork.c
 SRCS+= POSIX2x_Fork.c

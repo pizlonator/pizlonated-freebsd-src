@@ -541,7 +541,7 @@
 #define	__GLOBL(sym)	__asm__(".filc_globl " __XSTRING(sym))
 #define	__WEAK(sym)	__asm__(".filc_weak " __XSTRING(sym))
 
-#define	__IDSTRING(name,string)	struct hack
+#define	__IDSTRING(name,string)	struct __hack
 
 /*
  * Embed the rcs id of a source file in the resulting library.  Note that in
